@@ -1,6 +1,6 @@
 use chrono::Local;
 use futures::{channel::mpsc, sink::Sink, SinkExt};
-use log::{info, trace};
+use log::trace;
 use yellowstone_grpc_proto::geyser::{
     subscribe_update::UpdateOneof, SubscribeRequest, SubscribeRequestPing, SubscribeUpdate,
 };
