@@ -1,6 +1,6 @@
 use chrono::Local;
 use futures::{channel::mpsc, sink::Sink, SinkExt};
-use log::info;
+use log::{info, trace};
 use yellowstone_grpc_proto::geyser::{
     subscribe_update::UpdateOneof, SubscribeRequest, SubscribeRequestPing, SubscribeUpdate,
 };
@@ -24,7 +24,7 @@ impl StreamHandler {
         match msg.update_oneof {
             Some(UpdateOneof::BlockMeta(sut)) => {
                 let block_meta_pretty = BlockMetaPretty::from((sut, created_at));
-                log::info!("Received block meta: {:?}", block_meta_pretty);
+                log::trace!("Received block meta: {:?}", block_meta_pretty);
                 Self::handle_backpressure(
                     tx,
                     EventPretty::BlockMeta(block_meta_pretty),
@@ -34,7 +34,7 @@ impl StreamHandler {
             }
             Some(UpdateOneof::Transaction(sut)) => {
                 let transaction_pretty = TransactionPretty::from((sut, created_at));
-                log::info!(
+                log::trace!(
                     "Received transaction: {} at slot {}",
                     transaction_pretty.signature,
                     transaction_pretty.slot
@@ -55,10 +55,10 @@ impl StreamHandler {
                         ..Default::default()
                     })
                     .await?;
-                info!("service is ping: {}", Local::now());
+                trace!("service is ping: {}", Local::now());
             }
             Some(UpdateOneof::Pong(_)) => {
-                info!("service is pong: {}", Local::now());
+                trace!("service is pong: {}", Local::now());
             }
             _ => {
                 log::debug!("Received other message type");

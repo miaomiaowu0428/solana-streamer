@@ -142,8 +142,8 @@ impl EventProcessor {
                     Ok(events) => {
                         let event_count = events.len();
                         if !events.is_empty() {
-                            log::info!("Parsed {} events", event_count);
-                            log::info!("Adding {} events to batch processor", event_count);
+                            log::trace!("Parsed {} events", event_count);
+                            log::trace!("Adding {} events to batch processor", event_count);
                             for event in events {
                                 if self.config.batch.enabled {
                                     batch_processor.add_event(event);
@@ -165,7 +165,7 @@ impl EventProcessor {
 
                 // 添加调试信息
                 if total_events > 0 {
-                    log::info!(
+                    log::trace!(
                         "Total events parsed: {} for transaction {}",
                         total_events,
                         signature
